@@ -52,6 +52,7 @@ defmodule BudgieWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{BudgieWeb.UserAuth, :require_authenticated}] do
+      live "/budgets", BudgetListLive
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end
