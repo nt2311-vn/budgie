@@ -24,5 +24,21 @@ defmodule Budgie.TrackingTest do
       assert(budget.end_date == ~D[2025-03-31])
       assert(budget.creator_id == user.id)
     end
+
+    test "create_budget/1 requires name" do
+      user = Budgie.AccountsFixtures.user_fixture()
+
+      attrs_without_name = %{
+        description: "some description",
+        start_date: ~D[2025-01-01],
+        end_date: ~D[2025-03-31],
+        creator_id: user.id
+      }
+
+      assert({:error, %Ecto.Changeset{} = changeset} = Tracking.create_budget(attrs_without_name))
+
+      assert changeset.valid? == false
+      assert Keyword.keys(changeset.errors) == [:name]
+    end
   end
 end
