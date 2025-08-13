@@ -463,6 +463,37 @@ defmodule BudgieWeb.CoreComponents do
     end
   end
 
+  # in lib/budgie_web/core_components.ex
+  attr :id, :string, required: true
+  attr :show, :boolean, default: false
+  attr :on_cancel, JS, default: %JS{}
+  slot :inner_block, required: true
+
+  def modal(assigns) do
+    ~H"""
+    <div
+      id={@id}
+      class={[
+        "fixed inset-0 z-50 overflow-y-auto",
+        if(@show, do: "flex", else: "hidden")
+      ]}
+      role="dialog"
+      aria-modal="true"
+      phx-click={@on_cancel}
+      phx-window-keydown={@on_cancel}
+      phx-key="escape"
+    >
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
+      <div
+        class="relative bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full m-auto"
+        phx-click-away={@on_cancel}
+      >
+        {render_slot(@inner_block)}
+      </div>
+    </div>
+    """
+  end
+
   @doc """
   Translates the errors for a field from a keyword list of errors.
   """
