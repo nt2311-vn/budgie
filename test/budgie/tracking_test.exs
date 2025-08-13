@@ -35,17 +35,13 @@ defmodule Budgie.TrackingTest do
     test "create_budget/1 end before start" do
       user = Budgie.AccountsFixtures.user_fixture()
 
-      attrs_end_before_start = %{
-        name: "some name",
-        description: "some description",
-        start_date: ~D[2025-12-01],
-        end_date: ~D[2025-03-31],
-        creator_id: user.id
-      }
+      attrs =
+        valid_budget_attributes()
+        |> Map.merge(%{start_date: ~D[2025-12-31], end_date: ~D[2025-01-01]})
 
       assert(
         {:error, %Ecto.Changeset{} = changeset} =
-          Tracking.create_budget(attrs_end_before_start)
+          Tracking.create_budget(attrs)
       )
 
       assert changeset.valid? == false
