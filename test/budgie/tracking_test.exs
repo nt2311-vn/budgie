@@ -22,17 +22,11 @@ defmodule Budgie.TrackingTest do
     end
 
     test "create_budget/1 requires name" do
-      user = Budgie.AccountsFixtures.user_fixture()
+      attrs =
+        valid_budget_attributes()
+        |> Map.delete(:name)
 
-      attrs_without_name = %{
-        description: "some description",
-        start_date: ~D[2025-01-01],
-        end_date: ~D[2025-03-31],
-        creator_id: user.id
-      }
-
-      assert({:error, %Ecto.Changeset{} = changeset} = Tracking.create_budget(attrs_without_name))
-
+      assert({:error, %Ecto.Changeset{} = changeset} = Tracking.create_budget(attrs))
       assert changeset.valid? == false
       assert Keyword.keys(changeset.errors) == [:name]
       assert %{name: ["can't be blank"]} = errors_on(changeset)
