@@ -33,8 +33,6 @@ defmodule Budgie.TrackingTest do
     end
 
     test "create_budget/1 end before start" do
-      user = Budgie.AccountsFixtures.user_fixture()
-
       attrs =
         valid_budget_attributes()
         |> Map.merge(%{start_date: ~D[2025-12-31], end_date: ~D[2025-01-01]})
