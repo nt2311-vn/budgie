@@ -14,6 +14,14 @@ defmodule BudgieWeb.BudgetListLive do
     {:ok, socket}
   end
 
+  def handle_event("budget-created", %{"budget_id" => _budget_id}, socket) do
+    budgets =
+      Tracking.list_budgets()
+      |> Budgie.Repo.preload(:creator)
+
+    {:noreply, assign(socket, budgets: budgets)}
+  end
+
   def render(assigns) do
     ~H"""
     <.modal
@@ -25,6 +33,7 @@ defmodule BudgieWeb.BudgetListLive do
       <.live_component
         module={BudgieWeb.CreateBudgetDialog}
         id="create_budget"
+        current_scope={@current_scope}
         current_user={@current_scope.user}
       />
     </.modal>

@@ -26,13 +26,21 @@ defmodule BudgieWeb.CreateBudgetDialog do
   end
 
   def handle_event("save", %{"budget" => params}, socket) do
-    params = Map.put(params, "creator_id", socket.assigns.current_user.id)
+    creator_id =
+      case socket.assigns do
+        %{current_user: %{} = user} -> user.id
+        %{current_scope: %{user: %{} = user}} -> user.id
+        _ -> nil
+      end
 
-    with {:ok, %Budget{}} <- Tracking.create_budget(params) do
+    params = Map.put(params, "creator_id", creator_id)
+
+    with {:ok, %Budget{} = budget} <- Tracking.create_budget(params) do
       socket =
         socket
         |> put_flash(:info, "Budget created")
-        |> push_navigate(to: ~p"/budgets", replace: true)
+        |> assign(form: to_form(Tracking.change_budget(%Budget{})))
+        |> push_event("budget-created", %{budget_id: budget.id})
 
       {:noreply, socket}
     else
