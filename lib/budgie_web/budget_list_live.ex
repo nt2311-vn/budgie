@@ -28,14 +28,15 @@ defmodule BudgieWeb.BudgetListLive do
         current_user={@current_scope.user}
       />
     </.modal>
-
-    <.link
-      navigate={~p"/budgets/new"}
-      class="bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-800 px-3 py-2 rounded-lg flex items-center gap-2"
-    >
-      <.icon name="hero-plus" class="h-4 w-4" />
-      <span>New Budget</span>
-    </.link>
+    <div class="flex justify-end">
+      <.link
+        navigate={~p"/budgets/new"}
+        class="bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-800 px-3 py-2 rounded-lg flex items-center gap-2"
+      >
+        <.icon name="hero-plus" class="h-4 w-4" />
+        <span>New Budget</span>
+      </.link>
+    </div>
     <.table id="budgets" rows={@budgets}>
       <:col :let={budget} label="Name">{budget.name}</:col>
       <:col :let={budget} label="Description">{budget.description}</:col>
